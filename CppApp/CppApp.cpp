@@ -51,7 +51,7 @@ class CGWSingleton
 	}
 };
 
-#define NetStringArray() CGWSingleton<CSharpLib::IGWStringNetArrayPtr, CSharpLib::CGWStringNetArray>::Get()
+#define NetArray() CGWSingleton<CSharpLib::IGWNetArrayPtr, CSharpLib::CGWNetArray>::Get()
 //#endif
 
 // CCppAppApp construction
@@ -99,11 +99,19 @@ BOOL CCppAppApp::InitInstance()
 	CWinAppEx::InitInstance();
 	::CoInitialize(nullptr);
 
-	auto igw_string_net_array = NetStringArray();
+	typedef void(*MyFuncT) ();
+
+	IUnknown* pRef = nullptr;
+	auto igw_string_net_array = NetArray();
 	igw_string_net_array->Add(L"Hallo");
 	igw_string_net_array->Add(L"Hallo2");
 	igw_string_net_array->Add(L"Hallo3");
 	igw_string_net_array->Add(L"Hallo4");
+	
+	igw_string_net_array->Bar(&pRef);
+	MyFuncT tp2 = (MyFuncT)pRef;
+	tp2();
+	
 	igw_string_net_array->RemoveAt(1);
 	int iRes = igw_string_net_array->Count;
 	// Initialize OLE libraries
